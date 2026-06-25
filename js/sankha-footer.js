@@ -29,8 +29,7 @@
   // ----------------------------------------------------------------- config
   var SOCIAL = [
     ["LinkedIn", "https://www.linkedin.com/in/sankhacooray/", "M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.3-.02-2.96-1.8-2.96-1.8 0-2.08 1.4-2.08 2.86V21H9z"],
-    ["GitHub", "https://github.com/sankhacooray", "M12 2a10 10 0 00-3.16 19.5c.5.09.68-.22.68-.48l-.01-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.36 1.09 2.94.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85l-.01 2.75c0 .27.18.58.69.48A10 10 0 0012 2z"],
-    ["Medium", "https://medium.com/@bsc2fast", "M13.54 12a6.8 6.8 0 11-13.6 0 6.8 6.8 0 0113.6 0zM20.96 12c0 3.54-.77 6.4-1.72 6.4-.94 0-1.71-2.86-1.71-6.4s.77-6.4 1.71-6.4c.95 0 1.72 2.86 1.72 6.4zM24 12c0 3.17-.27 5.74-.6 5.74-.34 0-.61-2.57-.61-5.74s.27-5.74.6-5.74c.34 0 .61 2.57.61 5.74z"]
+    ["GitHub", "https://github.com/sankhacooray", "M12 2a10 10 0 00-3.16 19.5c.5.09.68-.22.68-.48l-.01-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.36 1.09 2.94.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85l-.01 2.75c0 .27.18.58.69.48A10 10 0 0012 2z"]
   ];
 
   // The whole network, grouped. Add a site here once → it appears everywhere.
@@ -163,9 +162,9 @@
   }
 
   var CSS =
-  '.scn-footer{border-top:1px solid var(--scn-line);font-family:"DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;}' +
+  '.scn-footer{background:transparent;font-family:"DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;}' +
   '.scn-footer *{box-sizing:border-box;}' +
-  '.scn-inner{max-width:1080px;margin:0 auto;padding:52px 28px 26px;}' +
+  '.scn-inner{max-width:1080px;margin:0 auto;padding:26px 28px 22px;}' +
   '.scn-top{display:grid;grid-template-columns:.9fr 2fr;gap:clamp(28px,5vw,64px);}' +
   '@media(max-width:720px){.scn-top{grid-template-columns:1fr;gap:36px;}}' +
   '.scn-mark{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;border:1px solid var(--scn-line);font-family:Georgia,"Times New Roman",serif;font-size:20px;font-style:italic;color:var(--scn-accent);margin-bottom:16px;}' +
@@ -183,8 +182,10 @@
   '.scn-col a{color:var(--scn-dim);font-size:13.5px;text-decoration:none;transition:color .15s;display:inline-flex;align-items:center;gap:6px;}' +
   '.scn-col a:hover{color:var(--scn-fg);}' +
   '.scn-here{color:var(--scn-accent)!important;font-weight:600;}' +
-  '.scn-here::after{content:"you are here";font-family:ui-monospace,"JetBrains Mono",Menlo,monospace;font-size:8px;letter-spacing:.5px;text-transform:uppercase;color:var(--scn-accent);border:1px solid var(--scn-accent);border-radius:20px;padding:1px 6px;opacity:.8;}' +
-  '.scn-bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;margin-top:40px;padding-top:18px;border-top:1px solid var(--scn-line);font-size:12px;color:var(--scn-muted);}' +
+  '.scn-here::before{content:"";flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:var(--scn-accent);box-shadow:0 0 6px var(--scn-accent);animation:scn-pulse 2.4s ease-in-out infinite;}' +
+  '@keyframes scn-pulse{0%,100%{opacity:1}50%{opacity:.15}}' +
+  '@media(prefers-reduced-motion:reduce){.scn-here::before{animation:none}}' +
+  '.scn-bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;margin-top:22px;padding-top:16px;border-top:1px solid var(--scn-line);font-size:12px;color:var(--scn-muted);}' +
   '.scn-bar .scn-dot{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,"JetBrains Mono",Menlo,monospace;font-size:11px;}' +
   '.scn-bar .scn-dot::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--scn-accent);box-shadow:0 0 8px var(--scn-accent);}';
 
@@ -201,9 +202,10 @@
       var f = document.createElement("footer");
       f.className = "scn-footer";
       f.setAttribute("role", "contentinfo");
+      // No background fill — the footer inherits the parent container's colour.
       f.style.cssText =
         "--scn-fg:" + theme.fg + ";--scn-dim:" + theme.dim + ";--scn-muted:" + theme.muted +
-        ";--scn-accent:" + theme.accent + ";--scn-line:" + theme.line + ";background:" + theme.surface + ";";
+        ";--scn-accent:" + theme.accent + ";--scn-line:" + theme.line + ";";
       f.innerHTML = buildHTML();
 
       var mount = MOUNTSEL ? document.querySelector(MOUNTSEL) : null;

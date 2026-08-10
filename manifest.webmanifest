@@ -1,0 +1,18 @@
+{
+  "name": "cdn — Sankha Cooray",
+  "short_name": "cdn",
+  "description": "Shared front-end components for the sankhacooray network — the auto-theming footer, analytics loader, and other drop-in modules.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0a0a12",
+  "background_color": "#0a0a12",
+  "lang": "en",
+  "categories": ["developer"],
+  "icons": [
+    { "src": "assets/icon.svg",         "sizes": "any",     "type": "image/svg+xml" },
+    { "src": "assets/icon-192.png",     "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png",     "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

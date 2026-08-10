@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0a0a12;
+    color: #e8e8f2;
+    background-image:
+      radial-gradient(900px 460px at 16% -8%, rgba(124,156,255,0.14), transparent 60%),
+      radial-gradient(820px 560px at 104% 18%, rgba(169,139,255,0.10), transparent 60%);
+    padding: 72px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 500;
+    color: #7c9cff; text-transform: uppercase; letter-spacing: 4px;
+  }
+  h1 {
+    font-family: 'Instrument Serif', serif; font-weight: 400;
+    font-size: 96px; line-height: 1.02; letter-spacing: -2px; margin-top: 28px;
+  }
+  h1 em { color: #7c9cff; font-style: italic; }
+  .lede {
+    font-size: 25px; color: #9aa0b0; max-width: 720px; margin-top: 30px; line-height: 1.45;
+  }
+  .foot { display: flex; align-items: baseline; gap: 18px; }
+  .mark { font-family: 'Instrument Serif', serif; font-size: 40px; color: #7c9cff; letter-spacing: -0.5px; }
+  .by { font-family: 'JetBrains Mono', monospace; font-size: 17px; color: #9aa0b0; letter-spacing: 1px; }
+  .url { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 17px; color: #9aa0b0; letter-spacing: 1px; }
+  .braces { position: absolute; right: 70px; top: 84px; opacity: 0.9; }
+</style>
+</head>
+<body>
+  <svg class="braces" width="200" height="132" viewBox="0 0 200 132">
+    <g fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M64 12 C40 12 44 40 44 60 C44 82 22 66 22 66 C22 66 44 50 44 72 C44 92 40 120 64 120" stroke="#7c9cff" opacity="0.9"/>
+      <path d="M136 12 C160 12 156 40 156 60 C156 82 178 66 178 66 C178 66 156 50 156 72 C156 92 160 120 136 120" stroke="#a98bff" opacity="0.9"/>
+    </g>
+  </svg>
+
+  <div>
+    <div class="eyebrow">shared components</div>
+    <h1>One home for the<br>network's <em>shared code</em>.</h1>
+    <div class="lede">Drop-in front-end modules for every sub-site — the auto-theming footer, analytics loader, and more.</div>
+  </div>
+
+  <div class="foot">
+    <span class="mark">cdn</span>
+    <span class="by">Sankha Cooray</span>
+    <span class="url">cdn.sankhacooray.com</span>
+  </div>
+</body>
+</html>

@@ -33,7 +33,18 @@
   ];
 
   // The whole network, grouped. Add a site here once → it appears everywhere.
+  // NB: a project that belongs to a hub/lens is NOT listed individually here —
+  // its hub surfaces it. Only hubs + standalone sites live in this footer.
   var GROUPS = [
+    ["Hubs", [
+      ["music", "music.sankhacooray.com"],
+      ["biolens", "biolens.sankhacooray.com"],
+      ["kitchen", "kitchen.sankhacooray.com"],
+      ["lab", "lab.sankhacooray.com"],
+      ["play", "play.sankhacooray.com"],
+      ["fold", "fold.sankhacooray.com"],
+      ["travel", "travel.sankhacooray.com"]
+    ]],
     ["Portfolio", [
       ["sankhacooray.com", "sankhacooray.com"],
       ["v2 · archive", "v2.sankhacooray.com"],
@@ -41,21 +52,15 @@
     ]],
     ["Health & self", [
       ["vitals", "vitals.sankhacooray.com"],
-      ["date", "date.sankhacooray.com"],
-      ["conduct", "conduct.sankhacooray.com"]
+      ["date", "date.sankhacooray.com"]
     ]],
     ["Studio & labs", [
       ["ensemble", "ensemble.sankhacooray.com"],
       ["palette", "palette.sankhacooray.com"],
-      ["mixlab", "mixlab.sankhacooray.com"],
-      ["coffeelab", "coffeelab.sankhacooray.com"],
       ["pixels", "pixels.sankhacooray.com"]
     ]],
     ["Tools", [
-      ["fold", "fold.sankhacooray.com"],
-      ["biolens", "biolens.sankhacooray.com"],
       ["paynow", "paynow.sankhacooray.com"],
-      ["travel", "travel.sankhacooray.com"],
       ["dev", "dev.sankhacooray.com"]
     ]]
   ];

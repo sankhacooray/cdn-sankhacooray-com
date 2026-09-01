@@ -195,6 +195,48 @@
   '.scn-bar .scn-dot::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--scn-accent);box-shadow:0 0 8px var(--scn-accent);}';
 
   // ----------------------------------------------------------------- mount
+  var FOOTER_EL = null;
+
+  // (Re)apply the auto-detected palette to the mounted footer. Called on mount
+  // and again whenever the host page's theme changes (light/dark toggle), so
+  // the footer follows the page instead of freezing at its mount-time colours.
+  function applyTheme() {
+    if (!FOOTER_EL) return;
+    var theme = detectTheme();
+    // No background fill — the footer inherits the parent container's colour.
+    FOOTER_EL.style.cssText =
+      "--scn-fg:" + theme.fg + ";--scn-dim:" + theme.dim + ";--scn-muted:" + theme.muted +
+      ";--scn-accent:" + theme.accent + ";--scn-line:" + theme.line + ";";
+  }
+
+  // React to host-page theme changes: a data-theme/class flip on <html>/<body>,
+  // a "sc-themechange" event, or the OS colour-scheme changing.
+  function watchTheme() {
+    var scheduled = false;
+    function ping() {
+      if (scheduled) return;
+      scheduled = true;
+      var run = function () { scheduled = false; applyTheme(); };
+      (window.requestAnimationFrame ? requestAnimationFrame(run) : setTimeout(run, 16));
+    }
+    try {
+      var mo = new MutationObserver(function (muts) {
+        for (var i = 0; i < muts.length; i++) {
+          var a = muts[i].attributeName;
+          if (a === "data-theme" || a === "class" || a === "style") { ping(); break; }
+        }
+      });
+      mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class", "style"] });
+      if (document.body) mo.observe(document.body, { attributes: true, attributeFilter: ["data-theme", "class", "style"] });
+    } catch (e) {}
+    try { window.addEventListener("sc-themechange", ping); } catch (e) {}
+    try {
+      var mq = window.matchMedia("(prefers-color-scheme: dark)");
+      if (mq.addEventListener) mq.addEventListener("change", ping);
+      else if (mq.addListener) mq.addListener(ping);
+    } catch (e) {}
+  }
+
   function go() {
     try {
       if (document.getElementById("scn-footer-css") == null) {
@@ -203,19 +245,18 @@
         st.textContent = CSS;
         document.head.appendChild(st);
       }
-      var theme = detectTheme();
       var f = document.createElement("footer");
       f.className = "scn-footer";
       f.setAttribute("role", "contentinfo");
-      // No background fill — the footer inherits the parent container's colour.
-      f.style.cssText =
-        "--scn-fg:" + theme.fg + ";--scn-dim:" + theme.dim + ";--scn-muted:" + theme.muted +
-        ";--scn-accent:" + theme.accent + ";--scn-line:" + theme.line + ";";
       f.innerHTML = buildHTML();
+      FOOTER_EL = f;
+      applyTheme();
 
       var mount = MOUNTSEL ? document.querySelector(MOUNTSEL) : null;
       if (mount) mount.appendChild(f);
       else document.body.appendChild(f);
+
+      watchTheme();
     } catch (e) { /* fail soft */ }
   }
 

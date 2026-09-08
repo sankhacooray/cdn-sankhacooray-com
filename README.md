@@ -15,6 +15,7 @@ references it updates — no per-site copy to keep in sync.
 | File | What it does | Drop-in |
 |------|--------------|---------|
 | `sankha-footer.js` | Shared network footer — auto-themes to the host page, lists the whole ecosystem + social links. | see below |
+| `sankha-suite.js` | Shared app-suite chrome for the medical apps (Hemoto/Aegis/…): hamburger → left drawer cross-linking every app (live + upcoming), a plan chip, and the Aegis motto chip. The `APPS` registry in this file is the single source of truth for the sidebar. | `<script async src=".../js/sankha-suite.js?v=YYYYMMDD"></script>` (needs a `<header>` with `.brand`/`.acctbar`) |
 | `sankha-analytics.js` | Lightweight page-view beacon + "fame" badge (public analytics proxy). | `<script async src=".../js/sankha-analytics.js"></script>` |
 | `sankha-weather.js` | Token-free local weather widget (Open-Meteo). | mounts into its own target |
 | `sankha-chat.js` | Floating chat widget backed by a public proxy. | self-injecting |

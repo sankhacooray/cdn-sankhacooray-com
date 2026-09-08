@@ -24,7 +24,7 @@
     { id: 'aegis',   name: 'Aegis',   desc: 'Medications & SOS',              url: 'https://aegis.sankhacooray.com/app',   icon: 'fa-shield-halved',  color: '#c00000' },
     { id: 'vitals',  name: 'Vitals',  desc: 'Wearables & physiology',         url: 'https://vitals.sankhacooray.com/app', icon: 'fa-heart-pulse',    color: '#0f9d58' },
     { id: 'trophe',  name: 'Trophe',  desc: 'Nutrition & intake',             url: 'https://trophe.sankhacooray.com/app', icon: 'fa-bowl-food',      color: '#e08600', soon: true },
-    { id: 'prognos', name: 'Prognos', desc: 'Trends & risk foresight',        url: 'https://prognos.sankhacooray.com/app',icon: 'fa-chart-line',     color: '#2c5aa0', soon: true },
+    { id: 'prognos', name: 'Prognos', desc: 'Trends & risk foresight',        url: 'https://prognos.sankhacooray.com/app',icon: 'fa-chart-line',     color: '#2c5aa0' },
     { id: 'thymos',  name: 'Thymos',  desc: 'Mind, mood & stress',            url: 'https://thymos.sankhacooray.com/app', icon: 'fa-brain',          color: '#7b3fa0', soon: true },
   ];
 

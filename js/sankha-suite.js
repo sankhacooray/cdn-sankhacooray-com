@@ -28,6 +28,30 @@
     { id: 'thymos',  name: 'Thymos',  desc: 'Mind, mood & stress',            url: 'https://thymos.sankhacooray.com/app', icon: 'fa-brain',          color: '#7b3fa0' },
   ];
 
+  // ── Plan state + public API ────────────────────────────────────────────
+  // The host app resolves the signed-in user's plan (GET /api/me) and calls
+  // window.Suite.setPlan('pro'|'free'). Until then the chip shows Free. Apps can
+  // gate a premium action with window.Suite.requirePro('Feature name') — returns
+  // false and opens the upgrade modal for Free users, true for Pro.
+  var _plan = (window.SUITE_PLAN === 'pro') ? 'pro' : 'free';
+  var _els = {}, _openM = null;
+  function applyPlan() {
+    var pro = _plan === 'pro';
+    if (_els.chip) {
+      _els.chip.className = 'sd-chip' + (pro ? ' sd-pro' : '');
+      _els.chip.innerHTML = pro ? '<i class="fa-solid fa-bolt"></i> Pro' : '<span class="dot"></span> Free';
+      _els.chip.title = pro ? 'You’re on the Pro plan' : 'You’re on the Free plan — click to upgrade';
+    }
+    if (_els.foot) _els.foot.innerHTML = pro ? 'You’re on <b>Pro</b> — thank you.' : 'You’re on the <b>Free</b> plan.';
+    if (_els.up) _els.up.style.display = pro ? 'none' : '';
+  }
+  window.Suite = {
+    setPlan: function (p) { _plan = (p === 'pro') ? 'pro' : 'free'; try { window.SUITE_PLAN = _plan; } catch (e) {} applyPlan(); try { document.dispatchEvent(new CustomEvent('suite:plan', { detail: _plan })); } catch (e) {} },
+    plan: function () { return _plan; },
+    isPro: function () { return _plan === 'pro'; },
+    requirePro: function (feature) { if (_plan === 'pro') return true; if (_openM) _openM(feature); return false; }
+  };
+
   function init() {
     var current = window.SUITE_APP || (function () {
       var h = location.hostname;
@@ -68,6 +92,8 @@
     .sd-chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:#0f9d58;background:#e9f7ef;border:1px solid #cdeddb;border-radius:20px;padding:3px 9px;cursor:pointer;line-height:1}
     .sd-chip:hover{border-color:#0f9d58}
     .sd-chip .dot{width:6px;height:6px;border-radius:50%;background:#0f9d58}
+    .sd-chip.sd-pro{color:#a86400;background:#fff6e6;border-color:#f0d49a;cursor:default}
+    .sd-chip.sd-pro:hover{border-color:#f0d49a}
     .sd-lk{font-family:"Noto Sans Sinhala","Iskoola Pota",var(--sans,sans-serif)}
     .sd-mov{position:fixed;inset:0;background:rgba(16,24,40,.5);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
     .sd-mov.open{display:flex}
@@ -150,11 +176,24 @@
     overlay.onclick = closeD;
     drawer.querySelector('.sd-x').onclick = closeD;
     drawer.querySelector('.sd-up').onclick = function () { closeD(); openM(); };
-    chip.onclick = openM;
+    chip.onclick = function () { if (_plan !== 'pro') openM(); };
     if (motto) motto.onclick = function () { suiteToast('දීර්ඝායු — “long life / longevity.” Your emergency card, always ready.'); };
     modalWrap.addEventListener('click', function (e) { if (e.target === modalWrap || e.target.hasAttribute('data-close')) closeM(); });
-    modalWrap.querySelector('[data-waitlist]').onclick = function () { closeM(); suiteToast('Thanks — we\'ll let you know when Pro launches.'); };
+    // Primary CTA: once Stripe is wired the host sets window.SUITE_CHECKOUT();
+    // until then it falls back to the "notify me" toast.
+    modalWrap.querySelector('[data-waitlist]').onclick = function () { if (typeof window.SUITE_CHECKOUT === 'function') { window.SUITE_CHECKOUT(); return; } closeM(); suiteToast('Thanks — we\'ll let you know when Pro launches.'); };
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeD(); closeM(); } });
+
+    // Wire plan state to the freshly-built elements and reflect any known plan.
+    _els.chip = chip; _els.foot = drawer.querySelector('.sd-plan'); _els.up = drawer.querySelector('.sd-up');
+    _openM = function (feature) {
+      var p = modalWrap.querySelector('.sd-modal p');
+      if (p) p.innerHTML = feature
+        ? 'The <b>' + feature + '</b> feature is part of <b>Pro</b>. Unlock it across every app in the suite.'
+        : 'You\'re on the <b>Free</b> plan. Pro unlocks higher limits and every premium feature across the suite.';
+      openM();
+    };
+    applyPlan();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

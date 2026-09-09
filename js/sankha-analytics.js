@@ -24,17 +24,27 @@
 (function () {
   'use strict';
 
+  // Per-page overrides via the loading <script> tag's data-* attributes:
+  //   data-measurement-id="G-XXXX"  → report into a different GA4 property
+  //                                    (e.g. a dedicated medical-suite property)
+  //   data-badge="off"              → GA tracking only, no public visitor badge
+  //                                    (used on the login-gated suite apps)
+  var self = document.currentScript || document.querySelector('script[src*="sankha-analytics.js"]');
+  var idAttr = self && self.getAttribute('data-measurement-id');
+  var badgeAttr = self && self.getAttribute('data-badge');
+
   var CONFIG = {
-    // GA4 Measurement ID for the shared network property. Format: G-XXXXXXXXXX.
+    // GA4 Measurement ID. Defaults to the shared network property; override per
+    // page with data-measurement-id. Format: G-XXXXXXXXXX.
     // Get it from GA4 Admin → Data Streams → your web stream.
-    MEASUREMENT_ID: 'G-EPVPJGS2JL',
+    MEASUREMENT_ID: idAttr || 'G-EPVPJGS2JL',
 
     // The Apps Script web-app /exec URL (the analytics proxy deployment).
     // Get it after `npm run deploy` in analytics-sankhacooray-com.
     PROXY_URL: 'https://script.google.com/macros/s/AKfycbwvNZxtG3yOd2YUCDjRxUt9x9BcDP2St-ywC8WcecI_TcqirM3crgTW0qaR_712JTdhdw/exec',
 
-    // Set false to ship gtag tracking without the public visitor badge.
-    SHOW_BADGE: true
+    // Public visitor badge. On by default; set data-badge="off" to ship gtag only.
+    SHOW_BADGE: badgeAttr !== 'off'
   };
 
   // ───────────────────────────── gtag ─────────────────────────────

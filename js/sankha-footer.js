@@ -55,7 +55,6 @@
       ["date", "date.sankhacooray.com"]
     ]],
     ["Studio & labs", [
-      ["ensemble", "ensemble.sankhacooray.com"],
       ["palette", "palette.sankhacooray.com"],
       ["pixels", "pixels.sankhacooray.com"]
     ]],
@@ -129,6 +128,7 @@
     if (bg[3] === 0) bg = [14, 18, 10, 1];                 // sensible dark default
     var fg = parse(body.color);
     var dark = lum(bg) < 128;
+    var acc = detectAccent(fg);
     var toward = dark ? [255, 255, 255] : [0, 0, 0];
     return {
       fg:      css(fg),
@@ -136,7 +136,8 @@
       line:    css(fg, 0.12),
       dim:     css(fg, 0.72),
       muted:   css(fg, 0.45),
-      accent:  css(detectAccent(fg))
+      accent:  css(acc),
+      accentSoft: css(acc, dark ? 0.16 : 0.10)
     };
   }
 
@@ -148,19 +149,26 @@
     var social = SOCIAL.map(function (s) {
       return '<a href="' + s[1] + '" title="' + s[0] + '" target="_blank" rel="noopener">' + svg(s[2]) + '</a>';
     }).join("");
-    var cols = GROUPS.map(function (g) {
-      var items = g[1].map(function (it) {
-        var cur = it[1] === HERE;
-        return '<li><a class="' + (cur ? "scn-here" : "") + '"' + (cur ? ' aria-current="page"' : '') +
-               ' href="https://' + it[1] + '">' + it[0] + '</a></li>';
-      }).join("");
+    function link(it, cls) {
+      var cur = it[1] === HERE;
+      cls = (cls || "") + (cur ? " scn-here" : "");
+      return '<a' + (cls.trim() ? ' class="' + cls.trim() + '"' : '') + (cur ? ' aria-current="page"' : '') +
+             ' href="https://' + it[1] + '">' + it[0] + '</a>';
+    }
+    // The first group (Hubs) — the main destinations — renders as a row of
+    // chips; every other group sits beneath it in an even grid of columns.
+    var hubs = GROUPS[0];
+    var chips = hubs[1].map(function (it) { return link(it, "scn-chip"); }).join("");
+    var cols = GROUPS.slice(1).map(function (g) {
+      var items = g[1].map(function (it) { return '<li>' + link(it) + '</li>'; }).join("");
       return '<div class="scn-col"><h5>' + g[0] + '</h5><ul>' + items + '</ul></div>';
     }).join("");
     return '<div class="scn-inner"><div class="scn-top">' +
         '<div><div class="scn-mark">SC</div><div class="scn-name">Sankha Cooray</div>' +
         '<div class="scn-role">Developer &amp; Innovator · Singapore</div>' +
         '<div class="scn-social">' + social + '</div></div>' +
-        '<div><div class="scn-net-h">Across the network</div><div class="scn-cols">' + cols + '</div></div>' +
+        '<div><div class="scn-col"><h5>' + hubs[0] + '</h5><div class="scn-chips">' + chips + '</div></div>' +
+        '<div class="scn-cols">' + cols + '</div></div>' +
       '</div>' +
       '<div class="scn-bar"><span class="scn-dot">part of the sankhacooray.com network</span>' +
       '<span>© ' + year + ' Sankha Cooray' + (TAGLINE ? ' · ' + TAGLINE : '') + '</span></div></div>';
@@ -169,28 +177,30 @@
   var CSS =
   '.scn-footer{background:transparent;font-family:"DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;}' +
   '.scn-footer *{box-sizing:border-box;}' +
-  '.scn-inner{max-width:1080px;margin:0 auto;padding:26px 28px 22px;}' +
-  '.scn-top{display:grid;grid-template-columns:.9fr 2fr;gap:clamp(28px,5vw,64px);}' +
+  '.scn-inner{max-width:1080px;margin:0 auto;padding:32px 28px 24px;}' +
+  '.scn-top{display:grid;grid-template-columns:1fr 2.6fr;gap:clamp(28px,5vw,64px);align-items:start;}' +
   '@media(max-width:720px){.scn-top{grid-template-columns:1fr;gap:36px;}}' +
   '.scn-mark{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;border:1px solid var(--scn-line);font-family:Georgia,"Times New Roman",serif;font-size:20px;font-style:italic;color:var(--scn-accent);margin-bottom:16px;}' +
-  '.scn-name{font-family:Georgia,"Times New Roman",serif;font-size:26px;color:var(--scn-fg);line-height:1.1;}' +
+  '.scn-name{font-family:Georgia,"Times New Roman",serif;font-size:28px;color:var(--scn-fg);line-height:1.1;}' +
   '.scn-role{font-family:ui-monospace,"JetBrains Mono",Menlo,monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--scn-muted);margin-top:8px;}' +
   '.scn-social{display:flex;gap:10px;margin-top:20px;}' +
-  '.scn-social a{width:34px;height:34px;border-radius:9px;border:1px solid var(--scn-line);display:grid;place-items:center;color:var(--scn-dim);text-decoration:none;transition:.18s;}' +
-  '.scn-social a:hover{color:var(--scn-accent);border-color:var(--scn-accent);transform:translateY(-2px);}' +
-  '.scn-net-h{font-family:ui-monospace,"JetBrains Mono",Menlo,monospace;font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--scn-muted);margin-bottom:16px;display:flex;align-items:center;gap:9px;}' +
-  '.scn-net-h::after{content:"";flex:1;height:1px;background:var(--scn-line);}' +
-  '.scn-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 18px;}' +
+  '.scn-social a{width:36px;height:36px;border-radius:9px;border:1px solid var(--scn-line);display:grid;place-items:center;color:var(--scn-dim);text-decoration:none;transition:color .18s,border-color .18s;}' +
+  '.scn-social a:hover{color:var(--scn-accent);border-color:var(--scn-accent);}' +
+  '.scn-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}' +
+  '.scn-chip{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:999px;border:1px solid var(--scn-line);color:var(--scn-dim);font-size:14px;text-decoration:none;transition:color .15s,border-color .15s,background .15s;}' +
+  '.scn-chip:hover{color:var(--scn-fg);border-color:var(--scn-accent);}' +
+  '.scn-chip.scn-here{background:var(--scn-accent-soft);border-color:var(--scn-accent);}' +
+  '.scn-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:24px 18px;}' +
   '@media(max-width:720px){.scn-cols{grid-template-columns:repeat(2,1fr);}}' +
-  '.scn-col h5{font-family:ui-monospace,"JetBrains Mono",Menlo,monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--scn-accent);margin:0 0 10px;font-weight:600;}' +
-  '.scn-col ul{list-style:none;margin:0;padding:0;display:grid;gap:7px;}' +
-  '.scn-col a{color:var(--scn-dim);font-size:13.5px;text-decoration:none;transition:color .15s;display:inline-flex;align-items:center;gap:6px;}' +
-  '.scn-col a:hover{color:var(--scn-fg);}' +
+  '.scn-col h5{font-family:ui-monospace,"JetBrains Mono",Menlo,monospace;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--scn-accent);margin:0 0 12px;font-weight:600;}' +
+  '.scn-col ul{list-style:none;margin:0;padding:0;display:grid;gap:9px;}' +
+  '.scn-col ul a{color:var(--scn-dim);font-size:14.5px;text-decoration:none;transition:color .15s;display:inline-flex;align-items:center;gap:6px;}' +
+  '.scn-col ul a:hover{color:var(--scn-fg);}' +
   '.scn-here{color:var(--scn-accent)!important;font-weight:600;}' +
   '.scn-here::before{content:"";flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:var(--scn-accent);box-shadow:0 0 6px var(--scn-accent);animation:scn-pulse 2.4s ease-in-out infinite;}' +
   '@keyframes scn-pulse{0%,100%{opacity:1}50%{opacity:.15}}' +
   '@media(prefers-reduced-motion:reduce){.scn-here::before{animation:none}}' +
-  '.scn-bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;margin-top:22px;padding-top:16px;border-top:1px solid var(--scn-line);font-size:12px;color:var(--scn-muted);}' +
+  '.scn-bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;margin-top:32px;padding-top:18px;border-top:1px solid var(--scn-line);font-size:12.5px;color:var(--scn-muted);}' +
   '.scn-bar .scn-dot{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,"JetBrains Mono",Menlo,monospace;font-size:11px;}' +
   '.scn-bar .scn-dot::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--scn-accent);box-shadow:0 0 8px var(--scn-accent);}';
 
@@ -206,7 +216,8 @@
     // No background fill — the footer inherits the parent container's colour.
     FOOTER_EL.style.cssText =
       "--scn-fg:" + theme.fg + ";--scn-dim:" + theme.dim + ";--scn-muted:" + theme.muted +
-      ";--scn-accent:" + theme.accent + ";--scn-line:" + theme.line + ";";
+      ";--scn-accent:" + theme.accent + ";--scn-accent-soft:" + theme.accentSoft +
+      ";--scn-line:" + theme.line + ";";
   }
 
   // React to host-page theme changes: a data-theme/class flip on <html>/<body>,

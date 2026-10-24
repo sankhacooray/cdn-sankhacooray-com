@@ -38,8 +38,16 @@
   var GROUPS = [
     ["Hubs", [
       ["music", "music.sankhacooray.com"],
+      ["learn", "learn.sankhacooray.com"],
+      ["food", "food.sankhacooray.com"],
+      ["city", "city.sankhacooray.com"],
+      ["language", "language.sankhacooray.com"],
+      ["design", "design.sankhacooray.com"],
+      ["make", "make.sankhacooray.com"],
+      ["dev", "dev.sankhacooray.com"],
+      ["access", "access.sankhacooray.com"],
+      ["sense", "sense.sankhacooray.com"],
       ["biolens", "biolens.sankhacooray.com"],
-      ["kitchen", "kitchen.sankhacooray.com"],
       ["lab", "lab.sankhacooray.com"],
       ["play", "play.sankhacooray.com"],
       ["fold", "fold.sankhacooray.com"],
@@ -59,8 +67,7 @@
       ["pixels", "pixels.sankhacooray.com"]
     ]],
     ["Tools", [
-      ["paynow", "paynow.sankhacooray.com"],
-      ["dev", "dev.sankhacooray.com"]
+      ["paynow", "paynow.sankhacooray.com"]
     ]]
   ];
 

@@ -19,6 +19,7 @@ references it updates — no per-site copy to keep in sync.
 | `sankha-analytics.js` | Lightweight page-view beacon + "fame" badge (public analytics proxy). | `<script async src=".../js/sankha-analytics.js"></script>` |
 | `sankha-weather.js` | Token-free local weather widget (Open-Meteo). | mounts into its own target |
 | `sankha-chat.js` | Floating chat widget backed by a public proxy. | self-injecting |
+| `sankha-contact.js` | Shared contact form: heading row (host heading + pitch), full-width message, Name · Email · Send on one line. Themes from host tokens; posts to the contact Apps Script. | see below |
 
 ### `sankha-footer.js`
 
@@ -41,6 +42,36 @@ derives a matching palette). Optional attributes:
 
 To add a new site to every footer at once, edit the `GROUPS` array in
 `js/sankha-footer.js`.
+
+### `sankha-contact.js`
+
+```html
+<div id="scn-contact" data-source="music.sankhacooray.com">
+  <h2>Get in touch</h2>   <!-- optional: the site's own heading, kept as-is -->
+</div>
+<script defer src="https://cdn.sankhacooray.com/js/sankha-contact.js?v=20261025"></script>
+```
+
+Renders the whole contact block, handles validation, sending, errors and the
+"Message sent" state. Children of the mount become the left side of the heading
+row; with none it renders its own "Get in touch". Collapses by container width
+(not viewport), so it fits a wide section or a narrow column.
+
+| Attribute | Purpose |
+|-----------|---------|
+| `data-source` | origin tag stored with each inquiry (default: hostname) |
+| `data-pitch` / `data-pitch-em` | pitch line and its italic accent phrase (`""` to omit the accent) |
+| `data-note` | small line under the pitch (`""` to omit) |
+| `data-title` | heading text when the mount has no children |
+| `data-case="lower"` | lowercase labels and buttons (dev site style) |
+
+Theming comes from the host page's CSS variables: `--gold` or `--accent`,
+`--surface`, `--border`, `--text`, `--text-dim`/`--dim`,
+`--text-muted`/`--muted`, `--serif`, `--mono`, `--cta-fg`/`--on-accent`,
+`--danger`. Override any of them on the section to adjust one site.
+
+Used by: music, fold, biolens, palette, vitals (health), dev (activity) and
+sankhacooray.com (v3). Backend: `contact-sankhacooray-com`.
 
 ## Hosting
 

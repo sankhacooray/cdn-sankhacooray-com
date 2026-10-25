@@ -19,7 +19,7 @@
      data-source    origin tag stored with each inquiry (default: hostname)
      data-pitch     pitch text before the accent phrase
      data-pitch-em  accent phrase in italics ("" to omit)
-     data-note      small line under the pitch ("" to omit)
+     data-note      sentence added after the message placeholder ("" to omit)
      data-title     heading used when the mount has no children
      data-case      "lower" lowercases labels and buttons (dev site style)
 
@@ -53,13 +53,12 @@
     "  container:scc/inline-size;display:flex;flex-direction:column;gap:clamp(18px,3vh,28px);color:var(--scc-text);text-align:left}",
     ".scc *,.scc *::before,.scc *::after{box-sizing:border-box}",
     /* heading row: host heading | pitch, bottoms aligned */
-    ".scc-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(20px,4vw,56px);align-items:end}",
+    ".scc-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(20px,4vw,56px);align-items:end;align-items:last baseline}",
     ".scc .scc-title>*{margin-top:0;margin-bottom:0}",
     ".scc-h{font-family:var(--scc-serif);font-weight:400;font-size:clamp(32px,5.4vh,50px);line-height:1.04;letter-spacing:-.01em}",
     ".scc-pitch{display:flex;flex-direction:column;gap:4px}",
     ".scc .scc-say{margin:0;font-family:var(--scc-serif);font-weight:400;font-size:clamp(22px,3.4vh,30px);line-height:1.2;color:var(--scc-text)}",
     ".scc .scc-say em{color:var(--scc-accent)}",
-    ".scc .scc-note{margin:0;font-size:clamp(15px,2.1vh,17px);line-height:1.5;color:var(--scc-dim)}",
     /* form */
     ".scc-form{display:flex;flex-direction:column;gap:14px;margin:0}",
     ".scc-form[hidden],.scc-done[hidden]{display:none}",
@@ -94,7 +93,7 @@
     ".scc .scc-again:focus-visible{outline:2px solid var(--scc-accent);outline-offset:3px}",
     /* narrow containers */
     "@container scc (max-width:680px){",
-    "  .scc-head{grid-template-columns:minmax(0,1fr);gap:10px}",
+    "  .scc-head{grid-template-columns:minmax(0,1fr);gap:10px;align-items:start}",
     "  .scc-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}",
     "  .scc-send{grid-column:1/-1;width:100%}",
     "}",
@@ -167,8 +166,6 @@
     var em = attr(mount, "data-pitch-em", "say hello?");
     if (em) { say.appendChild(document.createTextNode(" ")); say.appendChild(el("em", null, em)); }
     pitch.appendChild(say);
-    var noteText = attr(mount, "data-note", "Drop a note and it'll reach me directly.");
-    if (noteText) pitch.appendChild(el("p", "scc-note", noteText));
     head.appendChild(title);
     head.appendChild(pitch);
 
@@ -178,7 +175,9 @@
     var fields = el("fieldset", "scc-fields");
     var msg = document.createElement("textarea");
     msg.name = "message"; msg.required = true; msg.maxLength = 5000; msg.rows = 4;
-    msg.placeholder = T("What's on your mind?");
+    /* the note rides in the placeholder, so the pitch stays one line level with the heading */
+    var noteText = attr(mount, "data-note", "Drop a note and it'll reach me directly.");
+    msg.placeholder = T("What's on your mind?" + (noteText ? " " + noteText : ""));
     fields.appendChild(field("scc-message-" + n, T("Message"), msg));
 
     var row = el("div", "scc-row");

@@ -61,7 +61,7 @@ row; with none it renders its own "Get in touch". Collapses by container width
 |-----------|---------|
 | `data-source` | origin tag stored with each inquiry (default: hostname) |
 | `data-pitch` / `data-pitch-em` | pitch line and its italic accent phrase (`""` to omit the accent) |
-| `data-note` | small line under the pitch (`""` to omit) |
+| `data-note` | sentence added after the message placeholder (`""` to omit) |
 | `data-title` | heading text when the mount has no children |
 | `data-case="lower"` | lowercase labels and buttons (dev site style) |
 

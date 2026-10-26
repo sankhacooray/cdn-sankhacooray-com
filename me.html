@@ -46,6 +46,12 @@
                font:600 15px system-ui,-apple-system,sans-serif; cursor:pointer; }
   button.cta:hover { filter:brightness(1.08); box-shadow:0 0 0 4px rgba(124,156,255,.25); }
   button.cta.quiet { background:transparent; color:var(--ink-2); box-shadow:inset 0 0 0 1.5px var(--off); }
+  .field { display:block; font-size:13px; font-weight:600; margin:0 0 14px; }
+  .field span { font-weight:400; color:var(--ink-2); }
+  .field input { display:block; width:100%; box-sizing:border-box; margin-top:6px; height:42px; padding:0 14px;
+                 border-radius:12px; border:1.5px solid var(--off); background:transparent; color:var(--ink);
+                 font:15px system-ui,-apple-system,sans-serif; }
+  .field input:focus { outline:none; border-color:var(--accent); }
   ul { color:var(--ink-2); font-size:13px; padding-left:18px; margin:20px 0 0; }
   li { margin:4px 0; }
   .theme { position:fixed; top:14px; right:14px; width:34px; height:34px; border-radius:50%; border:0;
@@ -69,6 +75,9 @@
     <p class="eyebrow">sankhacooray.com analytics</p>
     <h1><span class="dot" id="dot"></span><span id="status">Checking…</span></h1>
     <p id="detail"></p>
+    <label class="field">Name this browser <span>shown in your analytics console</span>
+      <input id="name" maxlength="40" autocomplete="off" placeholder="e.g. MacBook Chrome">
+    </label>
     <button class="cta" id="toggle"></button>
     <ul>
       <li>Covers every *.sankhacooray.com site in this browser.</li>
@@ -98,10 +107,45 @@
     b.textContent = me ? 'Count this browser again' : 'Stop counting this browser';
     b.className = 'cta' + (me ? ' quiet' : '');
   }
+  // Each browser gets a random id so the console can list it; pings go to
+  // the analytics proxy (Me.js) because an excluded browser never reaches GA.
+  var PROXY = 'https://script.google.com/macros/s/AKfycbwvNZxtG3yOd2YUCDjRxUt9x9BcDP2St-ywC8WcecI_TcqirM3crgTW0qaR_712JTdhdw/exec';
+  function cookie(n) { var m = new RegExp('(?:^|;\\s*)' + n + '=([^;]*)').exec(document.cookie); return m ? decodeURIComponent(m[1]) : ''; }
+  function deviceId() {
+    var id = cookie('sankha_me_id');
+    if (!/^[a-f0-9]{16}$/.test(id)) {
+      var b = new Uint8Array(8); crypto.getRandomValues(b);
+      id = Array.prototype.map.call(b, function (x) { return ('0' + x.toString(16)).slice(-2); }).join('');
+    }
+    document.cookie = 'sankha_me_id=' + id + '; domain=.sankhacooray.com; path=/; max-age=' + 400 * 86400 + '; SameSite=Lax; Secure';
+    return id;
+  }
+  function deviceLabel() {
+    var ua = navigator.userAgent;
+    var b = /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /SamsungBrowser/.test(ua) ? 'Samsung Internet'
+          : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /FxiOS|Firefox\//.test(ua) ? 'Firefox' : /Safari\//.test(ua) ? 'Safari' : 'Browser';
+    var o = /iPhone/.test(ua) ? 'iPhone' : /iPad/.test(ua) ? 'iPad' : /Android/.test(ua) ? 'Android'
+          : /Mac OS X|Macintosh/.test(ua) ? 'macOS' : /Windows/.test(ua) ? 'Windows' : /Linux/.test(ua) ? 'Linux' : '';
+    return b + (o ? ' · ' + o : '');
+  }
+  var nameEl = document.getElementById('name');
+  try { nameEl.value = localStorage.getItem('me-name') || ''; } catch (e) {}
+  nameEl.placeholder = 'e.g. ' + deviceLabel();
+  function ping(state) {
+    var q = { source: 'me', id: deviceId(), state: state, label: deviceLabel(), name: nameEl.value.trim(), host: location.hostname };
+    new Image().src = PROXY + '?' + Object.keys(q).map(function (k) { return k + '=' + encodeURIComponent(q[k]); }).join('&');
+  }
+  nameEl.onchange = function () {
+    try { localStorage.setItem('me-name', nameEl.value.trim()); } catch (e) {}
+    if (isMe()) ping('seen');
+  };
+
   var m = /[?&]me=(on|off)\b/.exec(location.search);
-  if (m) setMe(m[1] === 'on');
-  else if (isMe()) setMe(true);   // refresh the expiry
-  document.getElementById('toggle').onclick = function () { setMe(!isMe()); render(); };
+  if (m) { setMe(m[1] === 'on'); ping(m[1]); }
+  else if (isMe()) { setMe(true); ping('seen'); }   // refresh the expiry
+  document.getElementById('toggle').onclick = function () {
+    var on = !isMe(); setMe(on); ping(on ? 'on' : 'off'); render();
+  };
 
   var root = document.documentElement;
   try { var t = localStorage.getItem('theme'); if (t) root.setAttribute('data-theme', t); } catch (e) {}

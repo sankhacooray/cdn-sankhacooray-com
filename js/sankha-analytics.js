@@ -1,9 +1,13 @@
 /**
  * sankha-analytics.js — one shared script for the whole sankhacooray.com
- * network. Hosted on the main site and loaded by every page (including
- * subdomains, cross-origin) with a single line before </body>:
+ * network, loaded by every page (including subdomains, cross-origin) with a
+ * single line before </body>:
  *
  *   <script async src="https://sankhacooray.com/js/sankha-analytics.js"></script>
+ *
+ * Two identical copies are served: this one (cdn.sankhacooray.com) and
+ * v3-sankhacooray-com/js/sankha-analytics.js (the apex URL above, which the
+ * pages load). Edit here, then copy it over the v3 file.
  *
  * It does two things:
  *   1. Boots Google Analytics (gtag) against the one shared GA4 property,
@@ -47,10 +51,37 @@
     SHOW_BADGE: badgeAttr !== 'off'
   };
 
+  // ───────────────────────── who counts ──────────────────────────
+  // Only real network hosts are tracked: workers.dev previews, localhost and
+  // file previews never reach GA.
+  //
+  // Owner opt-out: open any network page with ?me=on once per browser and GA
+  // stops counting that browser on every subdomain (the cookie lives on
+  // .sankhacooray.com); ?me=off undoes it. The cookie is re-written on each
+  // visit because Safari caps script-set cookies at 7 days.
+  var ME_COOKIE = 'sankha_me';
+  var onNetwork = /(^|\.)sankhacooray\.com$/.test(location.hostname);
+
+  function setMe(on) {
+    document.cookie = ME_COOKIE + '=' + (on ? '1' : '') + '; domain=.sankhacooray.com; path=/; max-age=' +
+      (on ? 400 * 86400 : 0) + '; SameSite=Lax; Secure';
+  }
+
+  var meParam = /[?&]me=(on|off)\b/.exec(location.search);
+  if (meParam && onNetwork) {
+    setMe(meParam[1] === 'on');
+    ready(function () {
+      notice(meParam[1] === 'on' ? 'Analytics off for this browser' : 'Analytics on for this browser');
+    });
+  }
+  var isMe = new RegExp('(?:^|;\\s*)' + ME_COOKIE + '=1').test(document.cookie);
+  if (isMe) setMe(true);
+
   // ───────────────────────────── gtag ─────────────────────────────
   (function bootGtag() {
     var id = CONFIG.MEASUREMENT_ID;
     if (!id || id.indexOf('XXXX') !== -1) return;   // not configured yet
+    if (!onNetwork || isMe) return;                 // preview host, or the owner
 
     var s = document.createElement('script');
     s.async = true;
@@ -89,6 +120,18 @@
       })
       .catch(function () { /* fail soft: no badge */ });
   });
+
+  // Short confirmation pill for ?me=on / ?me=off, gone after 4 s.
+  function notice(text) {
+    var el = document.createElement('div');
+    el.textContent = text;
+    el.setAttribute('role', 'status');
+    el.style.cssText = 'position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:2147483001;' +
+      'padding:8px 14px;border-radius:999px;font:500 13px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;' +
+      'color:#e8e8ee;background:rgba(18,18,22,.9);box-shadow:0 4px 16px rgba(0,0,0,.3);';
+    document.body.appendChild(el);
+    setTimeout(function () { el.remove(); }, 4000);
+  }
 
   function num(n) {
     n = n || 0;

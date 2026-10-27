@@ -30,8 +30,19 @@ references it updates — no per-site copy to keep in sync.
         data-tagline="a personal metabolism journal"></script>
 ```
 
+Renders **one short line**: `© year Sankha Cooray · tagline` on the left, a
+**Network** button and the social icons on the right. No divider line. The full
+network map (hubs as chips, the other groups as columns) opens from the Network
+button in a full-screen frosted overlay (click/tap; Esc, the close button or a
+click on the glass closes it). The tagline hides below 560px so the line stays
+one line on phones.
+
 Auto-themes to the host page (reads its rendered background / text / accent and
-derives a matching palette). Optional attributes:
+derives a matching palette; every colour falls back to `currentColor`), and
+re-themes on `data-theme`/`class` flips, the `sc-themechange` event and OS
+scheme changes. Hosts may still override `--scn-fg`, `--scn-dim`,
+`--scn-muted`, `--scn-accent`, `--scn-accent-soft` on `.scn-footer`; the line
+itself is `.scn-footer .scn-inner`. Optional attributes:
 
 | Attribute | Purpose |
 |-----------|---------|

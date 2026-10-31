@@ -84,6 +84,23 @@ Theming comes from the host page's CSS variables: `--gold` or `--accent`,
 Used by: music, fold, biolens, palette, vitals (health), dev (activity) and
 sankhacooray.com (v3). Backend: `contact-sankhacooray-com`.
 
+## Source → build
+
+The URLs above serve **minified** builds. The readable, commented source of
+`sankha-analytics.js`, `sankha-footer.js`, `sankha-contact.js` and
+`sankha-weather.js` lives in `js/src/`. To change one:
+
+1. Edit `js/src/<name>.js`.
+2. Run `./build.sh` (pinned `esbuild@0.24.0`, `--minify --target=es2017`; it
+   also runs `node --check` on each output).
+3. Commit both `js/src/<name>.js` and `js/<name>.js`, push.
+
+`sankha-analytics.js` and `sankha-weather.js` are also served from the apex
+(`v3-sankhacooray-com/js/`). After editing them here, copy the source to
+`v3-sankhacooray-com/js/src/`, run its `./build.sh`, and confirm
+`cmp` says the two minified files are identical before pushing both repos.
+(`sankha-suite.js` and `sankha-chat.js` are still served as source.)
+
 ## Hosting
 
 - GitHub Pages, custom domain `cdn.sankhacooray.com` (see `CNAME`).

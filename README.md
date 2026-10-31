@@ -81,7 +81,7 @@ Theming comes from the host page's CSS variables: `--gold` or `--accent`,
 `--text-muted`/`--muted`, `--serif`, `--mono`, `--cta-fg`/`--on-accent`,
 `--danger`. Override any of them on the section to adjust one site.
 
-Used by: music, fold, biolens, palette, vitals (health), dev (activity) and
+Used by: music, make, biomed, design, vitals (health), dev (activity) and
 sankhacooray.com (v3). Backend: `contact-sankhacooray-com`.
 
 ## Source → build

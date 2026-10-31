@@ -50,13 +50,12 @@
       ["language", "language.sankhacooray.com"],
       ["design", "design.sankhacooray.com"],
       ["make", "make.sankhacooray.com"],
+      ["craft", "craft.sankhacooray.com"],
       ["dev", "dev.sankhacooray.com"],
       ["access", "access.sankhacooray.com"],
       ["sense", "sense.sankhacooray.com"],
-      ["biolens", "biolens.sankhacooray.com"],
-      ["lab", "lab.sankhacooray.com"],
+      ["biomed", "biomed.sankhacooray.com"],
       ["play", "play.sankhacooray.com"],
-      ["fold", "fold.sankhacooray.com"],
       ["travel", "travel.sankhacooray.com"]
     ]],
     ["Portfolio", [
@@ -69,7 +68,6 @@
       ["date", "date.sankhacooray.com"]
     ]],
     ["Studio & labs", [
-      ["palette", "palette.sankhacooray.com"],
       ["pixels", "pixels.sankhacooray.com"]
     ]],
     ["Tools", [

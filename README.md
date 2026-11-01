@@ -15,6 +15,7 @@ references it updates — no per-site copy to keep in sync.
 | File | What it does | Drop-in |
 |------|--------------|---------|
 | `sankha-footer.js` | Shared network footer — auto-themes to the host page, lists the whole ecosystem + social links. | see below |
+| `sankha-apps.js` | Mini apps bar: one centred row of icon chips cross-linking every site in a suite (music, …), placed just above the footer. The `SUITES` registry in `js/src/sankha-apps.js` is the single source of truth. | see below |
 | `sankha-suite.js` | Shared app-suite chrome for the medical apps (Hemoto/Aegis/…): hamburger → left drawer cross-linking every app (live + upcoming), a plan chip, and the Aegis motto chip. The `APPS` registry in this file is the single source of truth for the sidebar. | `<script async src=".../js/sankha-suite.js?v=YYYYMMDD"></script>` (needs a `<header>` with `.brand`/`.acctbar`) |
 | `sankha-analytics.js` | Lightweight page-view beacon + "fame" badge (public analytics proxy). | `<script async src=".../js/sankha-analytics.js"></script>` |
 | `sankha-weather.js` | Token-free local weather widget (Open-Meteo). | mounts into its own target |
@@ -54,6 +55,32 @@ itself is `.scn-footer .scn-inner`. Optional attributes:
 To add a new site to every footer at once, edit the `GROUPS` array in
 `js/sankha-footer.js`.
 
+### `sankha-apps.js`
+
+```html
+<nav id="scn-apps" data-suite="music"></nav>   <!-- just above the footer -->
+<script defer src="https://cdn.sankhacooray.com/js/sankha-apps.js?v=20261101"></script>
+```
+
+Renders one centred, wrapping row of pill chips (the app's own icon + name)
+for every app in the suite. The site you are on is a non-link chip with a
+gentle pulse in its own colour (static under reduced motion). Text inherits the
+host's colour and font, chip backgrounds are tints of `currentColor`, so it
+needs no theming on light or dark pages. After rendering it fires a window
+`resize` so screen-fit layouts re-measure their sections.
+
+| Attribute | Purpose |
+|-----------|---------|
+| `data-suite` | key in `SUITES` (required) |
+| `data-current` | app id to mark as current (default: matched from hostname) |
+| `data-mount` | on the script tag: mount selector (default `#scn-apps`) |
+
+To add an app to a suite (or a new suite), edit `SUITES` in
+`js/src/sankha-apps.js`, run `./build.sh`, push, then bump `?v=` on every site
+in that suite. The `suite-app-bar` Claude skill automates the whole round.
+
+Suites: **music** — Music hub, Conduct, Gamut, Aruth, Cadence.
+
 ### `sankha-contact.js`
 
 ```html
@@ -87,8 +114,8 @@ sankhacooray.com (v3). Backend: `contact-sankhacooray-com`.
 ## Source → build
 
 The URLs above serve **minified** builds. The readable, commented source of
-`sankha-analytics.js`, `sankha-footer.js`, `sankha-contact.js` and
-`sankha-weather.js` lives in `js/src/`. To change one:
+`sankha-analytics.js`, `sankha-footer.js`, `sankha-contact.js`,
+`sankha-weather.js` and `sankha-apps.js` lives in `js/src/`. To change one:
 
 1. Edit `js/src/<name>.js`.
 2. Run `./build.sh` (pinned `esbuild@0.24.0`, `--minify --target=es2017`; it

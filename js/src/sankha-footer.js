@@ -80,6 +80,9 @@
     return (v == null || v === "") ? def : v;
   }
   var HERE    = data("site", "");
+  // The network map is out of date; hide the Network button and its overlay
+  // everywhere until a new one is built. Flip back to true to restore.
+  var SHOW_NETWORK = false;
   var TAGLINE = data("tagline", "");
   var PINNED  = data("accent", "");
   var MOUNTSEL = data("mount", "#scn-footer");
@@ -201,8 +204,8 @@
         '<span class="scn-left"><span class="scn-name">© ' + year + ' Sankha Cooray</span>' +
         (TAGLINE ? '<span class="scn-tag"> · ' + TAGLINE + '</span>' : '') + '</span>' +
         '<span class="scn-right">' +
-          '<button type="button" class="scn-netbtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="' + UID + '" title="The sankhacooray.com network">' +
-            svg(GRID_ICON, 13) + '<span>Network</span></button>' +
+          (SHOW_NETWORK ? '<button type="button" class="scn-netbtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="' + UID + '" title="The sankhacooray.com network">' +
+            svg(GRID_ICON, 13) + '<span>Network</span></button>' : '') +
           '<span class="scn-social">' + socialHTML(15) + '</span>' +
         '</span></div>';
   }
@@ -387,7 +390,7 @@
       if (mount) mount.appendChild(f);
       else document.body.appendChild(f);
 
-      try { wireOverlay(f.querySelector(".scn-netbtn")); } catch (e) {}
+      if (SHOW_NETWORK) { try { wireOverlay(f.querySelector(".scn-netbtn")); } catch (e) {} }
       applyTheme();
       watchTheme();
     } catch (e) { /* fail soft */ }
